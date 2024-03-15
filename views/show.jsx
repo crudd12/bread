@@ -11,6 +11,7 @@ function Show({ bread }) {
         {bread.hasGluten ? <span> does </span> : <span> does not </span>}
         have gluten
       </p>
+      <p>{bread.getBakedBy()}</p>
       <img src={bread.image} alt={bread.name} />
       <li>
         <a href="/bread">Go Home</a>
