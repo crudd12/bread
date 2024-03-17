@@ -1,12 +1,15 @@
 const router = require('express').Router()
 const Bread = require('../models/bread')
+const Baker = require('../models/baker')
 
 // GET retrieve all the bread -- "breads" is the key (key can be named anything) - "Bread" is the data model to pull from and the path
 router.get('/', async (req, res) => {
     try {
         const breads = await Bread.find()
+        const bakers = await Baker.find()
         res.render('index', {
-            breads
+            breads,
+            bakers
         })
     } catch (error) {
         console.log('error:', error)
@@ -15,14 +18,17 @@ router.get('/', async (req, res) => {
 })
 
 // Render New page
-router.get('/new', (req, res) => {
-    res.render('new')
+router.get('/new', async (req, res) => {
+    const bakers = await Baker.find()
+    res.render('new', {
+        bakers
+    })
 })
 
 // GET retrieve bread by index
 router.get('/:id', async (req, res) => {
     const { id } = req.params
-    const bread = await Bread.findById(id)
+    const bread = await Bread.findById(id).populate('baker')
     res.render('show', {
         bread
     })
@@ -32,8 +38,10 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/edit', async (req, res) => {
     const { id } = req.params
     const bread = await Bread.findById(id)
+    const bakers = await Baker.find()
     res.render('edit', {
-        bread
+        bread,
+        bakers
     })
 })
 
@@ -102,6 +110,15 @@ router.get('/data/seed', async (req, res) => {
             image: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80',
         }
     ]
+    // const bakers = await Baker.find()
+    // const bakerIds = bakers.map(baker => baker._id)
+
+    // seedData.forEach(bread => {
+    //     // const random = 
+    //     const randomId = bakerIds[Math.floor(Math.random() * bakerIds)]
+    //     console.log(randomId)
+    //     bread.baker = randomId
+    // })
 
     await Bread.deleteMany()
     await Bread.insertMany(seedData)

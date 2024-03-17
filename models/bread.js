@@ -13,14 +13,14 @@ const breadSchema = new mongoose.Schema({
     default: 'https://houseofnasheats.com/wp-content/uploads/2022/02/French-Bread-1.jpg'
   },
   baker: {
-    type: String,
-    enum: ['Rachel', 'Monica', 'Joey', 'Chandler', 'Ross', 'Phoebe']
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Baker'
   }
 })
 
 breadSchema.methods.getBakedBy = function () {
-  return `${this.name} was baked by ${this.baker}`
+  return `${this.name} was baked by ${this.baker.name} who has been here since ${this.baker.startDate.getFullYear()}.`
 }
 
-// breadSchema is the data structure and 'Bread' is the collection/model (the bread data in the data structure that is displayed to the user)
+// breadSchema is the data structure and 'Bread' is the collection/model name 
 module.exports = mongoose.model('Bread', breadSchema)
