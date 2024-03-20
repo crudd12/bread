@@ -9,6 +9,7 @@ const app = express()
 
 //middlewares --> has to be above the routes
 app.use(methodOverride('_method'))
+// used so we can use variables in the URL paths
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.set('views', __dirname + '/views')
